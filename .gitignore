@@ -1,0 +1,9 @@
+.env
+api/.env
+client/.env
+admin/.env
+
+.env.*
+api/.env.*
+client/.env.*
+admin/.env.*
