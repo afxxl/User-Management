@@ -1,12 +1,17 @@
 const User = require("../models/User.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
 exports.registerUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg });
+  }
+
   const { username, email, password } = req.body;
   try {
     const existingUser = await User.findOne({ email });
@@ -27,6 +32,10 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg });
+  }
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email }).select("+password");
@@ -46,6 +55,10 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg });
+  }
   try {
     const userId = req.params.id;
     let user = await User.findById(userId);
@@ -59,6 +72,9 @@ exports.updateUser = async (req, res) => {
 
     user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
+    if (req.file) {
+      user.profilePic = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    }
 
     const updatedUser = await user.save();
     const { password: _, ...userWithoutPassword } = updatedUser.toObject();

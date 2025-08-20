@@ -32,9 +32,18 @@ export const updateProfile = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+      formData.append("username", userData.username);
+      formData.append("email", userData.email);
+
+      if (userData.profilePic instanceof File) {
+        formData.append("profilePic", userData.profilePic);
+      }
+
       const response = await axios.put(
         `${API_URL}/update/${userData.id}`,
-        userData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,7 +64,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     user: storedUser ? JSON.parse(storedUser) : null,
-    token: storedToken ? JSON.parse(storedToken) : null,
+    token: storedToken ? storedToken : null,
     isLoading: false,
     error: null,
   },
