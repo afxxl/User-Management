@@ -26,8 +26,7 @@ exports.registerUser = async (req, res) => {
 
     res.status(201).json({ user: userWithoutPassword, token });
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: "Something Went Wrong" });
+    res.status(500).json({ message: error.message });
   }
 };
 

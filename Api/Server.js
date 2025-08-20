@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const authRouter = require("./routes/auth");
 const path = require("path");
 const multer = require("multer");
+const adminRouter = require("./routes/admin");
 
 dotenv.config();
 connectDB();
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError || err.message.includes("Only image")) {

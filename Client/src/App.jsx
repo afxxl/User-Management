@@ -6,6 +6,9 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home/Home";
 import Register from "./pages/Register/Register";
 import Profile from "./pages/Profile/Profile";
+import ProtectedAdmin from "./components/ProtectedAdmin";
+import Dashboard from "./pages/DashBoard/Dashboard";
+import Protected from "./components/Protected";
 
 function App() {
   return (
@@ -13,7 +16,14 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <Protected>
+                <Home />
+              </Protected>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
@@ -22,6 +32,14 @@ function App() {
               <ProtectedRoute>
                 <Profile />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedAdmin>
+                <Dashboard />
+              </ProtectedAdmin>
             }
           />
         </Routes>

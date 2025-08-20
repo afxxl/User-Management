@@ -15,7 +15,11 @@ const Register = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      if (user.isAdmin) {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
     }
   }, [user, navigate]);
 
